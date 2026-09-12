@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="config.js"></script>
+<script src="markets.js"></script>
+<script src="chains.js"></script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Flyholex · Launch here. Fly in from anywhere.</title>
+<meta name="description" content="Flyholex is a launchpad concept on Robinhood Chain. Launch a token with up to five markets and fly in to buy it from 61 EVM networks." />
+<link rel="icon" type="image/png" href="assets/img/favicon.png" />
+<link rel="apple-touch-icon" href="assets/img/apple-icon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+:root{--bg:#07060b;--surface:#0f0d15;--surface2:#17131f;--line:rgba(210,190,255,.1);--line2:rgba(210,190,255,.18);--text:#ece9f3;--muted:#958fa6;--acc:#7cf5d0;--acc2:#c79bff;--neg:#ff8a9a;--r:14px;--pad:clamp(16px,3vw,44px)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{background:var(--bg);color:var(--text);font-family:"Geist Mono",ui-monospace,monospace;font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased;
+  background-image:radial-gradient(ellipse at 75% 0%,rgba(199,155,255,.1),transparent 50%),radial-gradient(ellipse at 10% 30%,rgba(124,245,208,.06),transparent 45%)}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit;color:inherit}
+button{background:none;border:0;cursor:pointer}
+.disp{font-family:"Unbounded",sans-serif}
+.k{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.k.acc{color:var(--acc)}
+.grad{background:linear-gradient(90deg,var(--acc),var(--acc2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.in{width:min(1240px,100%);margin:0 auto}
+/* nav */
+.nav{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:18px;padding:12px var(--pad);background:rgba(7,6,11,.8);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.logo{display:flex;align-items:center;gap:10px;font-family:"Unbounded",sans-serif;font-weight:800;font-size:16px;letter-spacing:.02em}
+.logo svg{width:26px;height:26px}
+.links{display:flex;gap:4px;margin-left:12px}
+.links a{padding:7px 12px;border-radius:10px;font-size:12px;color:var(--muted)}
+.links a:hover{color:var(--text);background:var(--surface)}
+.nav .r{margin-left:auto;display:flex;gap:8px;align-items:center}
+.chip{display:inline-flex;align-items:center;gap:7px;height:34px;padding:0 12px;border:1px solid var(--line2);border-radius:10px;font-size:12px;color:var(--muted);white-space:nowrap}
+.chip i{width:7px;height:7px;border-radius:50%;background:var(--acc);box-shadow:0 0 8px var(--acc)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;padding:0 16px;border-radius:10px;border:1px solid var(--line2);background:var(--surface);font-size:13px;font-weight:500;white-space:nowrap;transition:border-color .15s,background .15s,transform .1s}
+.btn:hover{border-color:var(--acc)}
+.btn:active{transform:translateY(1px)}
+.btn.go{background:linear-gradient(90deg,var(--acc),#a8e8ff 50%,var(--acc2));border:0;color:#0a0710;font-weight:600}
+.btn img{width:15px;height:15px;object-fit:contain}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+section{padding:clamp(48px,7vw,96px) var(--pad)}
+/* hero */
+.hero{padding-top:clamp(28px,4vw,56px)}
+.hero .in{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(20px,3vw,48px);align-items:center}
+.kick{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border:1px solid var(--line2);border-radius:999px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.kick i{width:6px;height:6px;border-radius:50%;background:var(--acc)}
+h1{font-family:"Unbounded",sans-serif;font-weight:700;font-size:clamp(38px,5.6vw,76px);line-height:1.02;letter-spacing:-.03em;margin-top:18px}
+.sub{margin-top:18px;color:var(--muted);max-width:44ch;white-space:pre-line;font-size:15px}
+.acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+.acts .btn{height:46px;padding:0 20px}
+.micro{display:flex;gap:18px;flex-wrap:wrap;margin-top:18px;font-size:12px;color:var(--muted)}
+.stage{position:relative;aspect-ratio:1.25;min-height:320px}
+#portal{position:absolute;inset:0;width:100%;height:100%}
+.anchor{position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:min(210px,40%);background:rgba(15,13,21,.82);backdrop-filter:blur(8px);border:1px solid var(--line2);border-radius:var(--r);padding:10px 12px}
+.anchor.l{left:0} .anchor.r{right:0}
+.anchor .k{font-size:9.5px}
+.anchor select{width:100%;margin-top:6px;background:transparent;border:0;font-family:"Unbounded",sans-serif;font-weight:500;font-size:13px;color:var(--text);outline:none;cursor:pointer;appearance:none}
+.anchor select option{background:#15111c}
+.anchor .sub2{font-size:11px;color:var(--muted);margin-top:2px}
+.stage .base{position:absolute;left:50%;bottom:4%;transform:translateX(-50%);font-size:10px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;display:flex;gap:6px;align-items:center}
+.stage .base i{width:6px;height:6px;border-radius:50%;background:var(--acc2)}
+/* heads */
+.head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:22px}
+h2{font-family:"Unbounded",sans-serif;font-weight:700;font-size:clamp(26px,3.4vw,44px);line-height:1.05;letter-spacing:-.02em;margin-top:8px}
+.lead{margin-top:8px;color:var(--muted);max-width:62ch}
+/* tabs + feed */
+.tabs{display:inline-flex;gap:4px;padding:4px;border:1px solid var(--line);border-radius:12px;background:var(--surface);margin-bottom:18px}
+.tabs button{height:34px;padding:0 14px;border-radius:9px;font-size:12px;color:var(--muted)}
+.tabs button.on{background:var(--surface2);color:var(--text);box-shadow:inset 0 0 0 1px var(--line2)}
+.feed{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:grid;gap:12px;min-width:0;transition:border-color .15s,transform .15s}
+.card:hover{border-color:var(--line2);transform:translateY(-2px)}
+.card .top{display:flex;align-items:center;gap:10px;min-width:0}
+.mono{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;font-family:"Unbounded",sans-serif;font-weight:700;font-size:13px;color:#0a0710;flex:none}
+.card .nm{min-width:0}
+.card .nm b{display:block;font-family:"Unbounded",sans-serif;font-weight:500;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card .nm span{font-size:12px;color:var(--muted)}
+.card .age{margin-left:auto;font-size:11px;color:var(--muted);white-space:nowrap}
+.card p{color:var(--muted);font-size:13px;min-height:2.9em}
+.card .stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;border-top:1px solid var(--line);padding-top:10px}
+.card .stats span{display:block;font-size:10.5px;color:var(--muted);letter-spacing:.06em}
+.card .stats b{font-weight:500}
+.card .foot{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.mk{display:flex;gap:4px;flex-wrap:wrap}
+.mk em{font-style:normal;font-size:11px;padding:3px 7px;border-radius:7px;background:var(--surface2);border:1px solid var(--line)}
+.tag{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line2);border-radius:7px;padding:3px 7px}
+.tag.mine{color:var(--acc);border-color:rgba(124,245,208,.4)}
+.up{color:var(--acc)} .dn{color:var(--neg)}
+.empty{grid-column:1/-1;border:1px dashed var(--line2);border-radius:var(--r);padding:28px;text-align:center;color:var(--muted)}
+/* launch flow */
+.flow{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px;align-items:start}
+.step{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:clamp(16px,2.4vw,24px);margin-bottom:12px}
+.step .h{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.step .h b{font-family:"Unbounded",sans-serif;font-weight:500;font-size:15px}
+.step .h .n{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font-size:11px;background:var(--surface2);border:1px solid var(--line2);color:var(--acc)}
+.step .h .k{margin-left:auto}
+.f{display:grid;gap:6px;margin-bottom:12px}
+.f label{font-size:11px;color:var(--muted);letter-spacing:.06em}
+.f input,.f textarea{width:100%;background:var(--bg);border:1px solid var(--line2);border-radius:10px;padding:11px 12px;outline:none}
+.f textarea{min-height:74px;resize:vertical}
+.f input:focus,.f textarea:focus{border-color:var(--acc)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pre{position:relative} .pre span{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted)} .pre input{padding-left:24px}
+.pick{display:flex;gap:6px;flex-wrap:wrap}
+.pick button{height:34px;padding:0 11px;border-radius:9px;border:1px solid var(--line2);background:var(--bg);font-size:12px;display:inline-flex;align-items:center;gap:6px}
+.pick button.on{border-color:var(--acc);background:rgba(124,245,208,.08);color:var(--acc)}
+.pick button[disabled]{opacity:.35;cursor:not-allowed}
+.note{font-size:12px;color:var(--muted);margin-top:10px}
+.terms{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px}
+.terms div{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px}
+.terms span{display:block;font-size:10.5px;color:var(--muted)}
+.terms b{font-weight:500}
+.glance{position:sticky;top:76px;background:linear-gradient(180deg,var(--surface2),var(--surface));border:1px solid var(--line2);border-radius:18px;padding:18px;display:grid;gap:14px;overflow:hidden}
+.glance .rings{height:120px;border-radius:12px;background:radial-gradient(circle at 50% 50%,rgba(124,245,208,.25),transparent 30%),repeating-radial-gradient(circle at 50% 50%,rgba(199,155,255,.18) 0 1px,transparent 1px 11px);border:1px solid var(--line)}
+.glance .mono{width:54px;height:54px;font-size:16px;border-radius:14px;margin-top:-40px;margin-left:10px;box-shadow:0 0 0 4px var(--surface2)}
+.glance .t b{display:block;font-family:"Unbounded",sans-serif;font-weight:700;font-size:20px;word-break:break-word}
+.glance .t span{color:var(--muted)}
+.glance p{color:var(--muted);font-size:13px}
+.glance .lock{border-top:1px solid var(--line);padding-top:12px;font-size:12px;color:var(--muted)}
+.glance .lock b{display:block;color:var(--text);font-weight:500;margin-bottom:2px}
+.status{font-size:12px;color:var(--acc);min-height:18px}
+/* route */
+.route{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.hop{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px;display:grid;gap:10px;position:relative}
+.hop .n{font-family:"Unbounded",sans-serif;font-weight:800;font-size:40px;line-height:1;color:transparent;-webkit-text-stroke:1px var(--line2)}
+.hop b{font-family:"Unbounded",sans-serif;font-weight:500;font-size:17px}
+.hop p{color:var(--muted)}
+.rows{display:grid;border-top:1px solid var(--line);margin-top:4px}
+.rows div{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:13px}
+.rows span{color:var(--muted)}
+.routebar{display:flex;gap:10px;flex-wrap:wrap;align-items:end;margin-bottom:14px}
+.routebar .f{margin:0;min-width:180px}
+.routebar select,.routebar input{height:42px;background:var(--surface);border:1px solid var(--line2);border-radius:10px;padding:0 12px;outline:none;min-width:180px}
+.routebar select option{background:#15111c}
+/* contract */
+.ct{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:center;background:var(--surface);border:1px solid var(--line2);border-radius:18px;padding:clamp(18px,3vw,30px);cursor:pointer}
+.ct dl{display:grid;grid-template-columns:110px 1fr;gap:6px 14px}
+.ct dt{font-size:11px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;padding-top:2px}
+.ct dd{word-break:break-all}
+.ct .ca{font-weight:600}
+.ct .cp{font-size:12px;color:var(--muted);margin-top:10px}
+.ct .acts{margin:0;justify-content:flex-end}
+footer{border-top:1px solid var(--line);padding:22px var(--pad) 34px;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+footer nav{display:flex;gap:16px}
+footer a:hover{color:var(--text)}
+@media (max-width:1000px){
+  .links{display:none}
+  .hero .in{grid-template-columns:1fr}
+  .feed{grid-template-columns:1fr 1fr}
+  .flow{grid-template-columns:1fr} .glance{position:static}
+}
+@media (max-width:640px){
+  .nav .chip{display:none}
+  .feed{grid-template-columns:1fr}
+  .route{grid-template-columns:1fr}
+  .two,.terms{grid-template-columns:1fr}
+  .stage{aspect-ratio:auto;height:auto;min-height:0;display:grid;gap:10px}
+  #portal{position:relative;height:280px}
+  .anchor{position:static;transform:none;width:100%}
+  .stage .base{display:none}
+  .ct{grid-template-columns:1fr} .ct dl{grid-template-columns:1fr} .ct .acts{justify-content:flex-start}
+}
+@media (prefers-reduced-motion:reduce){#portal{opacity:.6}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a class="logo" href="#top"><svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="lg" x1="0" x2="1"><stop offset="0" stop-color="#7cf5d0"/><stop offset="1" stop-color="#c79bff"/></linearGradient></defs><ellipse cx="16" cy="16" rx="13" ry="8" fill="none" stroke="url(#lg)" stroke-width="2" transform="rotate(-25 16 16)"/><ellipse cx="16" cy="16" rx="7.5" ry="4.5" fill="none" stroke="url(#lg)" stroke-width="1.6" transform="rotate(-25 16 16)"/><circle cx="16" cy="16" r="2.4" fill="#ece9f3"/></svg><span data-name>Flyholex</span></a>
+  <div class="links"><a href="#launches">Launches</a><a href="#launch">Launch</a><a href="#route">Fly in</a><a href="/docs">Docs</a></div>
+  <div class="r"><span class="chip"><i></i>Robinhood Chain</span><a class="btn" data-link="x" href="https://x.com" aria-label="X"><img src="assets/img/x.svg" alt="X" style="filter:invert(1)" /></a><a class="btn go" data-link="pons" href="https://www.ponsfamily.com/launchpad"><img src="assets/img/pons.png" alt="" style="filter:brightness(0)" />Buy <span data-ticker>$FLYHOLEX</span></a></div>
+</nav>
+
+<main id="top">
+  <section class="hero"><div class="in">
+    <div>
+      <span class="kick"><i></i>The Robinhood Chain flypad</span>
+      <h1>Launch here.<br /><span class="grad">Fly in from anywhere.</span></h1>
+      <p class="sub" id="heroSub">Launch tokens on Robinhood Chain.
+Buy them with whatever buzzes on other networks.</p>
+      <div class="acts"><a class="btn go" href="#launch">+ Launch a token</a><a class="btn" href="#launches">Find a token →</a></div>
+      <div class="micro"><span>Your wallet, your swarm.</span><span>One token. Five markets.</span></div>
+    </div>
+    <div class="stage">
+      <canvas id="portal" aria-label="A wormhole made of flies"></canvas>
+      <div class="anchor l"><div class="k">Start with</div><select id="fromChain" aria-label="Source network"></select><div class="sub2" id="fromSym">ETH</div></div>
+      <div class="anchor r"><div class="k">Arrive at</div><select id="toToken" aria-label="Token"></select><div class="sub2">Robinhood Chain</div></div>
+      <div class="base"><i></i>Robinhood Chain</div>
+    </div>
+  </div></section>
+
+  <section id="launches"><div class="in">
+    <div class="head">
+      <div><div class="k acc">Hatched here. Open to every swarm.</div><h2>Flyholex launches.</h2><p class="lead">Tokens hatched through this pad. Examples and your own launches are simulated in this browser. The stock tokens tab is a real snapshot from the chain.</p></div>
+      <a class="btn" href="#launch">+ Launch a token</a>
+    </div>
+    <div class="tabs" id="tabs"><button class="on" data-t="pad">Flyholex launches</button><button data-t="mine">Your orbit</button><button data-t="stocks">Stock tokens</button></div>
+    <div class="feed" id="feed"></div>
+  </div></section>
+
+  <section id="launch"><div class="in">
+    <div class="head"><div><div class="k acc">Start something that buzzes</div><h2>Your idea. Its own swarm.</h2><p class="lead">Launch natively on Robinhood Chain, open to liquidity from everywhere. On this page the launch is a simulation, nothing is signed or deployed.</p></div></div>
+    <div class="flow">
+      <div>
+        <div class="step">
+          <div class="h"><span class="n">01</span><b>Give it an identity</b></div>
+          <div class="two"><div class="f"><label for="tName">Token name</label><input id="tName" maxlength="32" placeholder="The next big fly" /></div><div class="f"><label for="tTick">Ticker</label><div class="pre"><span>$</span><input id="tTick" maxlength="10" placeholder="TOKEN" /></div></div></div>
+          <div class="f"><label for="tDesc">Description</label><textarea id="tDesc" maxlength="140" placeholder="What is your token about?"></textarea></div>
+        </div>
+        <div class="step">
+          <div class="h"><span class="n">02</span><b>Choose your markets</b><span class="k">up to 5</span></div>
+          <div class="pick" id="pick"></div>
+          <p class="note">One token, several quote assets. Stock tokens listed are the ones trading on Robinhood Chain in the snapshot. Transfer-tax and rebasing tokens would not qualify.</p>
+        </div>
+        <div class="step">
+          <div class="h"><span class="n">03</span><b>Set your launch terms</b></div>
+          <div class="two"><div class="f"><label for="tBuy">First buy · optional</label><div class="pre"><input id="tBuy" type="number" min="0" step="0.01" placeholder="0.00" style="padding-left:12px" /></div></div><div class="f"><label for="tFee">Creator trading fee, %</label><input id="tFee" type="number" min="0" max="2" step="0.1" value="0" /></div></div>
+          <div class="terms"><div><span>Fixed supply</span><b>1B tokens</b></div><div><span>Total trading fee</span><b id="tTotal">1%</b></div><div><span>Flyholex fee</span><b>0%</b></div></div>
+          <p class="note">In a real launch the full supply would enter locked liquidity and the first buy would run in the same transaction. Here it becomes a card in your orbit.</p>
+          <div class="acts"><button class="btn go" id="tGo" disabled>Launch (simulated)</button><button class="btn" id="tClear">Clear my launches</button></div>
+          <div class="status" id="tStatus"></div>
+        </div>
+      </div>
+      <aside class="glance">
+        <div class="k">Your launch, at a glance</div>
+        <div class="rings"></div>
+        <div class="mono" id="gMono">FX</div>
+        <div class="t"><b id="gName">Your next big fly</b><span id="gTick">$TOKEN</span></div>
+        <p id="gDesc">A new fly in the Robinhood ecosystem.</p>
+        <div class="mk" id="gMk"></div>
+        <div class="lock"><b>Liquidity locked. Wings open.</b>Launch directly onchain, the market opens from the first block.</div>
+      </aside>
+    </div>
+  </div></section>
+
+  <section id="route"><div class="in">
+    <div class="head"><div><div class="k acc">Fly in from anywhere</div><h2>Two hops through the hole.</h2><p class="lead">Buying from another network is two stages: land in ETH on Robinhood Chain, then buy the token with a fresh quote. The route below is illustrative: no quotes, no bridges, no transactions.</p></div></div>
+    <div class="routebar">
+      <div class="f"><label for="rChain">From network</label><select id="rChain"></select></div>
+      <div class="f"><label for="rAmt">Amount</label><input id="rAmt" type="number" min="0" step="0.01" value="0.25" /></div>
+      <div class="f"><label for="rTok">To token</label><select id="rTok"></select></div>
+      <button class="btn go" id="rGo" style="height:42px">Fly in</button>
+    </div>
+    <div class="route">
+      <div class="hop"><span class="n">01</span><b>Land in ETH</b><p id="h1p">Bridge or swap into ETH in your own wallet on Robinhood Chain.</p><div class="rows" id="h1r"></div></div>
+      <div class="hop"><span class="n">02</span><b>Buy the token</b><p id="h2p">Take a fresh quote on Robinhood Chain and confirm the buy.</p><div class="rows" id="h2r"></div></div>
+    </div>
+    <p class="note" id="rNote"></p>
+  </div></section>
+
+  <section id="token"><div class="in">
+    <div class="head"><div><div class="k acc">The token</div><h2><span data-ticker>$FLYHOLEX</span></h2></div></div>
+    <div class="ct" id="ct" title="Copy contract">
+      <div><dl><dt>Name</dt><dd data-name>Flyholex</dd><dt>Ticker</dt><dd data-ticker>$FLYHOLEX</dd><dt>Chain</dt><dd>Robinhood Chain · Pons</dd><dt>Contract</dt><dd class="ca grad" id="ca">soon</dd></dl><div class="cp" id="cp">tap to copy</div></div>
+      <div class="acts"><a class="btn go" data-link="pons" href="https://www.ponsfamily.com/launchpad"><img src="assets/img/pons.png" alt="" style="filter:brightness(0)" />Buy on Pons</a><a class="btn" data-link="dex" href="https://dexscreener.com/robinhood">Chart</a><a class="btn" data-link="x" href="https://x.com">X</a></div>
+    </div>
+  </div></section>
+</main>
+
+<footer><span>● Robinhood Chain / Buzzing, always.</span><nav><a href="/docs">Docs</a><a data-link="x" href="https://x.com">X</a><a href="#launch">Launch</a></nav></footer>
+
+<script>
+(function(){
+  var S = window.SITE, CA = (S.CA || "SOON").trim(), HAS = CA !== "SOON" && CA !== "";
+  document.querySelectorAll('[data-name]').forEach(function(e){ e.textContent = S.NAME; });
+  document.querySelectorAll('[data-ticker]').forEach(function(e){ e.textContent = S.TICKER; });
+  document.querySelectorAll('[data-link="pons"]').forEach(function(a){ a.href = HAS ? window.PONS_HOME + '/' + CA : window.PONS_HOME; a.target = '_blank'; a.rel = 'noopener'; });
+  document.querySelectorAll('[data-link="dex"]').forEach(function(a){ a.href = HAS ? window.DEX_HOME + '/' + CA : window.DEX_HOME; a.target = '_blank'; a.rel = 'noopener'; });
+  document.querySelectorAll('[data-link="x"]').forEach(function(a){ a.href = S.X_URL || 'https://x.com'; a.target = '_blank'; a.rel = 'noopener'; });
+  var caEl = document.getElementById('ca'), cp = document.getElementById('cp'); caEl.textContent = HAS ? CA : 'soon';
+  document.getElementById('ct').addEventListener('click', function(e){ if(e.target.closest('a')) return; var old = cp.textContent; if(HAS){ if(navigator.clipboard) navigator.clipboard.writeText(CA); cp.textContent = 'copied'; } else cp.textContent = 'not yet'; setTimeout(function(){ cp.textContent = old; }, 1300); });
+
+  var C = window.CHAINS || [], M = window.MARKETS || [], P = [], ST = [];
+  function burst(n, col){ for(var i = 0; i < n; i++) ST.push({ t: -Math.random() * .8, sp: .45 + Math.random() * .35, col: col, off: (Math.random() - .5) * 60, bend: (Math.random() < .5 ? -1 : 1) * (.4 + Math.random() * .6), z: .7 + Math.random() * .5 }); }
+  document.getElementById('heroSub').textContent = 'Launch tokens on Robinhood Chain.\nBuy them with whatever buzzes on ' + C.length + ' other networks.';
+  function esc(s){ return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+  function hue(s){ var h = 0; for(var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) % 360; return h; }
+  function monoBg(t){ var h = hue(t || 'FX'); return 'linear-gradient(135deg,hsl(' + h + ',80%,72%),hsl(' + ((h + 70) % 360) + ',80%,70%))'; }
+  function ago(ts){ var s = Math.max(1, Math.floor((Date.now() - ts) / 1000)); return s < 60 ? s + 's' : s < 3600 ? Math.floor(s / 60) + 'm' : s < 86400 ? Math.floor(s / 3600) + 'h' : Math.floor(s / 86400) + 'd'; }
+
+  /* launches */
+  var now = Date.now();
+  var EX = [
+    { name: 'Maggot Money', tick: 'MAGGOT', desc: 'Grows on whatever is left on the table.', mk: ['ETH', 'USDG'], mcap: 3.42, vol: 1.9, ts: now - 7 * 60e3 },
+    { name: 'Buzz Index', tick: 'BUZZ', desc: 'One fly for every stock token on the chain.', mk: ['ETH', 'NVDA', 'TSLA', 'AAPL'], mcap: 2.08, vol: 0.6, ts: now - 26 * 60e3 },
+    { name: 'Swatter', tick: 'SWAT', desc: 'The only token that hunts the others.', mk: ['ETH'], mcap: 1.36, vol: 0, ts: now - 41 * 60e3 },
+    { name: 'Larva', tick: 'LARVA', desc: 'Not a fly yet. Give it a week.', mk: ['ETH', 'USDG', 'SPY'], mcap: 1.71, vol: 0.2, ts: now - 2 * 3600e3 },
+    { name: 'Hoverfly', tick: 'HOVER', desc: 'Looks like a bee. Trades like a fly.', mk: ['ETH', 'MSTR', 'COIN'], mcap: 4.9, vol: 3.1, ts: now - 5 * 3600e3 },
+    { name: 'Compound Eye', tick: 'EYES', desc: 'Watches five markets at once.', mk: ['ETH', 'WETH', 'USDG', 'QQQ', 'GLD'], mcap: 2.55, vol: 0.8, ts: now - 9 * 3600e3 }
+  ];
+  var KEY = 'flyholex:launches', mine = []; try{ mine = JSON.parse(localStorage.getItem(KEY) || '[]'); }catch(e){}
+  var feed = document.getElementById('feed'), tab = 'pad';
+  function card(t, tag){ return '<div class="card"><div class="top"><div class="mono" style="background:' + monoBg(t.tick) + '">' + esc(t.tick.slice(0, 2)) + '</div><div class="nm"><b>' + esc(t.name) + '</b><span>$' + esc(t.tick) + '</span></div><span class="age">' + ago(t.ts) + '</span></div><p>' + esc(t.desc || 'A new fly in the Robinhood ecosystem.') + '</p><div class="stats"><div><span>Market cap</span><b>' + t.mcap.toFixed(2) + ' ETH</b></div><div><span>Volume / all time</span><b>' + t.vol.toFixed(2) + ' ETH</b></div></div><div class="foot"><div class="mk">' + t.mk.map(function(m){ return '<em>' + esc(m) + '</em>'; }).join('') + '</div><span class="tag' + (tag === 'mine' ? ' mine' : '') + '">' + (tag === 'mine' ? 'yours · simulated' : 'example') + '</span></div></div>'; }
+  function stock(m){ return '<a class="card" href="https://dexscreener.com/robinhood/' + m.addr + '" target="_blank" rel="noopener"><div class="top"><div class="mono" style="background:' + monoBg(m.t) + '">' + esc(m.t.slice(0, 2)) + '</div><div class="nm"><b>' + esc(m.name) + '</b><span>' + esc(m.t) + ' · stock token</span></div></div><div class="stats"><div><span>Price</span><b>$' + m.price.toLocaleString('en-US', { maximumFractionDigits: 2 }) + '</b></div><div><span>24h</span><b class="' + (m.ch >= 0 ? 'up' : 'dn') + '">' + (m.ch >= 0 ? '+' : '') + m.ch.toFixed(2) + '%</b></div></div><div class="foot"><span style="font-size:12px;color:var(--muted)">24h vol $' + m.vol.toLocaleString('en-US') + '</span><span class="tag">' + m.addr.slice(0, 6) + '…' + m.addr.slice(-4) + '</span></div></a>'; }
+  function renderFeed(){
+    if(tab === 'pad') feed.innerHTML = mine.slice().reverse().map(function(t){ return card(t, 'mine'); }).join('') + EX.map(function(t){ return card(t, 'ex'); }).join('');
+    else if(tab === 'mine') feed.innerHTML = mine.length ? mine.slice().reverse().map(function(t){ return card(t, 'mine'); }).join('') : '<div class="empty">Nothing in your orbit yet. <a href="#launch" style="color:var(--acc)">Launch a token</a> and it lands here.</div>';
+    else feed.innerHTML = M.map(stock).join('') || '<div class="empty">The stock feed is catching up.</div>';
+  }
+  document.getElementById('tabs').addEventListener('click', function(e){ var b = e.target.closest('button'); if(!b) return; tab = b.dataset.t; this.querySelectorAll('button').forEach(function(x){ x.classList.toggle('on', x === b); }); renderFeed(); });
+  renderFeed(); setInterval(renderFeed, 30000);
+
+  /* launch flow */
+  var QUOTES = ['ETH', 'WETH', 'USDG'].concat(M.map(function(m){ return m.t; })), sel = ['ETH'];
+  var pick = document.getElementById('pick'), tName = document.getElementById('tName'), tTick = document.getElementById('tTick'), tDesc = document.getElementById('tDesc'), tBuy = document.getElementById('tBuy'), tFee = document.getElementById('tFee'), tGo = document.getElementById('tGo'), tStatus = document.getElementById('tStatus');
+  function renderPick(){ pick.innerHTML = QUOTES.map(function(q){ var on = sel.indexOf(q) > -1; return '<button data-q="' + q + '" class="' + (on ? 'on' : '') + '"' + (!on && sel.length >= 5 ? ' disabled' : '') + '>' + (on ? '✓ ' : '+ ') + q + '</button>'; }).join(''); }
+  pick.addEventListener('click', function(e){ var b = e.target.closest('button'); if(!b || b.disabled) return; var q = b.dataset.q, i = sel.indexOf(q); if(i > -1){ if(sel.length > 1) sel.splice(i, 1); } else if(sel.length < 5) sel.push(q); renderPick(); glance(); });
+  function tick(){ return (tTick.value || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 10); }
+  function glance(){
+    var t = tick(), n = tName.value.trim();
+    document.getElementById('gName').textContent = n || 'Your next big fly';
+    document.getElementById('gTick').textContent = '$' + (t || 'TOKEN');
+    document.getElementById('gDesc').textContent = tDesc.value.trim() || 'A new fly in the Robinhood ecosystem.';
+    var gm = document.getElementById('gMono'); gm.textContent = (t || 'FX').slice(0, 2); gm.style.background = monoBg(t || 'FX');
+    document.getElementById('gMk').innerHTML = sel.map(function(m){ return '<em>' + m + '</em>'; }).join('');
+    var fee = Math.max(0, Math.min(2, parseFloat(tFee.value) || 0)); document.getElementById('tTotal').textContent = (1 + fee).toFixed(1).replace('.0', '') + '%';
+    tGo.disabled = !(n && t);
+  }
+  [tName, tTick, tDesc, tBuy, tFee].forEach(function(i){ i.addEventListener('input', glance); });
+  tTick.addEventListener('input', function(){ var c = tick(); if(tTick.value !== c) tTick.value = c; });
+  tGo.addEventListener('click', function(){
+    if(tGo.disabled) return; tGo.disabled = true;
+    var steps = ['Checking markets and simulating your launch…', 'Simulation passed. Nothing to sign, this is a simulation.', 'Your token is flying through the hole…'], i = 0;
+    (function next(){ if(i < steps.length){ tStatus.textContent = steps[i++]; setTimeout(next, 750); return; }
+      var buy = Math.max(0, parseFloat(tBuy.value) || 0);
+      var t = { name: tName.value.trim(), tick: tick(), desc: tDesc.value.trim(), mk: sel.slice(), mcap: 1.36 + buy * 2, vol: buy, ts: Date.now() };
+      mine.push(t); try{ localStorage.setItem(KEY, JSON.stringify(mine)); }catch(e){}
+      tStatus.textContent = '$' + t.tick + ' landed in your orbit.'; fillTokens(); tab = 'pad';
+      document.querySelectorAll('#tabs button').forEach(function(x){ x.classList.toggle('on', x.dataset.t === 'pad'); }); renderFeed();
+      burst(46, '#7cf5d0'); glance(); document.getElementById('launches').scrollIntoView({ behavior: 'smooth' });
+    })();
+  });
+  document.getElementById('tClear').addEventListener('click', function(){ mine = []; try{ localStorage.removeItem(KEY); }catch(e){} tStatus.textContent = 'Your orbit is empty again.'; renderFeed(); fillTokens(); });
+  renderPick(); glance();
+
+  /* networks + tokens selects */
+  var fromChain = document.getElementById('fromChain'), toToken = document.getElementById('toToken'), rChain = document.getElementById('rChain'), rTok = document.getElementById('rTok'), rAmt = document.getElementById('rAmt');
+  var opts = C.map(function(c, i){ return '<option value="' + i + '">' + esc(c.name) + '</option>'; }).join('');
+  fromChain.innerHTML = opts; rChain.innerHTML = opts; fromChain.value = rChain.value = String(Math.max(0, C.findIndex(function(c){ return c.id === 8453; })));
+  function fillTokens(){ var list = [S.TICKER].concat(mine.map(function(t){ return '$' + t.tick; })).concat(EX.map(function(t){ return '$' + t.tick; })); var h = list.map(function(t){ return '<option>' + esc(t) + '</option>'; }).join(''); var a = toToken.value, b = rTok.value; toToken.innerHTML = h; rTok.innerHTML = h; if(a) toToken.value = a; if(b) rTok.value = b; }
+  fillTokens();
+  function syncFrom(src, dst){ dst.value = src.value; var c = C[+src.value]; document.getElementById('fromSym').textContent = c ? c.sym + (c.eth ? ' · native ETH' : ' · swap to ETH') : ''; route(); if(c) burst(14, c.col); }
+  fromChain.addEventListener('change', function(){ syncFrom(fromChain, rChain); });
+  rChain.addEventListener('change', function(){ syncFrom(rChain, fromChain); });
+  toToken.addEventListener('change', function(){ rTok.value = toToken.value; route(); });
+  rTok.addEventListener('change', function(){ toToken.value = rTok.value; route(); });
+  rAmt.addEventListener('input', route);
+  function route(){
+    var c = C[+rChain.value] || C[0], amt = Math.max(0, parseFloat(rAmt.value) || 0), tok = rTok.value;
+    document.getElementById('h1p').textContent = c.eth ? 'Bridge ETH from ' + c.name + ' to your own wallet on Robinhood Chain.' : 'Swap ' + c.sym + ' on ' + c.name + ' into ETH and bridge it to your own wallet on Robinhood Chain.';
+    document.getElementById('h1r').innerHTML = [['From', esc(c.name) + ' · chain ' + c.id], ['Send', amt + ' ' + esc(c.sym)], ['Kind', c.eth ? 'bridge' : 'swap + bridge'], ['Typical wait', '~' + c.min + ' min, illustrative'], ['Kept for gas', 'a small amount of ETH']].map(function(r){ return '<div><span>' + r[0] + '</span><b>' + r[1] + '</b></div>'; }).join('');
+    document.getElementById('h2p').textContent = 'Take a fresh quote for ' + tok + ' on Robinhood Chain and confirm the buy.';
+    document.getElementById('h2r').innerHTML = [['Pay with', 'ETH on Robinhood Chain'], ['Buy', esc(tok)], ['Quote', 'fresh, at the moment of buying'], ['If you stop here', 'the ETH stays in your wallet']].map(function(r){ return '<div><span>' + r[0] + '</span><b>' + r[1] + '</b></div>'; }).join('');
+    document.getElementById('rNote').textContent = C.length + ' networks listed. Names and native currencies come from chainid.network. Waits are rough and nothing on this page moves funds.';
+  }
+  document.getElementById('rGo').addEventListener('click', function(){ var c = C[+rChain.value] || C[0]; burst(60, c.col); document.getElementById('top').scrollIntoView({ behavior: 'smooth' }); });
+  syncFrom(rChain, fromChain);
+
+  /* the portal: a wormhole made of flies */
+  var cv = document.getElementById('portal'), ctx = cv.getContext('2d'), dpr = 1, W = 0, H = 0, cx = 0, cy = 0, R = 0, TILT = -0.42, SQ = .58;
+  var fly = new Image(), flyOk = false; fly.onload = function(){ flyOk = true; }; fly.src = 'assets/img/fly.png';
+  var last = performance.now(), RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function size(){ dpr = Math.min(devicePixelRatio || 1, 2); var r = cv.getBoundingClientRect(); W = r.width || 600; H = r.height || 480; cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); cx = W / 2; cy = H / 2; R = Math.min(W * .34, H * .46); }
+  function orbit(outer){ return { a: Math.random() * 6.283, r: R * (outer ? .85 + Math.random() * .2 : .15 + Math.random() * .9), s: .5 + Math.random() * .7, z: .7 + Math.random() * .6 }; }
+
+  function proj(a, r){ var x = Math.cos(a) * r, y = Math.sin(a) * r * SQ, c = Math.cos(TILT), s = Math.sin(TILT); return [cx + x * c - y * s, cy + x * s + y * c]; }
+  function drawFly(x, y, ang, sz, alpha, col){
+    ctx.globalAlpha = alpha;
+    if(flyOk){ ctx.save(); ctx.translate(x, y); ctx.rotate(ang); ctx.drawImage(fly, -sz / 2, -sz / 2, sz, sz); ctx.restore(); }
+    else { ctx.fillStyle = col || '#7cf5d0'; ctx.beginPath(); ctx.arc(x, y, sz * .18, 0, 6.283); ctx.fill(); }
+    if(col){ ctx.globalAlpha = alpha * .35; ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x, y, sz * .32, 0, 6.283); ctx.fill(); }
+    ctx.globalAlpha = 1;
+  }
+  function quad(p0, p1, p2, t){ var u = 1 - t; return [u * u * p0[0] + 2 * u * t * p1[0] + t * t * p2[0], u * u * p0[1] + 2 * u * t * p1[1] + t * t * p2[1]]; }
+  function frame(nowT){
+    var dt = Math.min(.05, (nowT - last) / 1000); last = nowT; if(RM) dt *= .25;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+    /* rings */
+    for(var j = 0; j < 9; j++){ var rr = R * (1.05 - j * .115); ctx.beginPath(); for(var k = 0; k <= 64; k++){ var p = proj(k / 64 * 6.283, rr); k ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]); } ctx.strokeStyle = j % 2 ? 'rgba(199,155,255,' + (.05 + j * .012) + ')' : 'rgba(124,245,208,' + (.05 + j * .014) + ')'; ctx.lineWidth = 1; ctx.stroke(); }
+    var g = ctx.createRadialGradient(cx, cy, 0, cx, cy, R * .38); g.addColorStop(0, 'rgba(236,255,248,.9)'); g.addColorStop(.25, 'rgba(124,245,208,.35)'); g.addColorStop(1, 'rgba(124,245,208,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, R * .38, 0, 6.283); ctx.fill();
+    /* orbiting flies, pulled inward */
+    var want = W < 500 ? 70 : 120; while(P.length < want) P.push(orbit(false));
+    for(var i = 0; i < P.length; i++){ var f = P[i];
+      f.a += dt * f.s * (0.6 + 38 / (f.r + 18)); f.r -= dt * R * .05 * f.s;
+      if(f.r < R * .07){ P[i] = orbit(true); continue; }
+      var q = proj(f.a, f.r), q2 = proj(f.a + .05, f.r - 1), ang = Math.atan2(q2[1] - q[1], q2[0] - q[0]) + Math.PI / 2;
+      var depth = (Math.sin(f.a) + 1) / 2, sz = (7 + f.r / R * 13) * f.z * (.75 + depth * .45);
+      drawFly(q[0], q[1], ang, sz, Math.min(1, f.r / (R * .22)) * (.45 + depth * .55), null);
+    }
+    /* streams: from the left card into the hole, then out to the right card */
+    var L = [W < 500 ? 10 : W * .1, cy], Rt = [W < 500 ? W - 10 : W * .9, cy];
+    for(var s = ST.length - 1; s >= 0; s--){ var st = ST[s]; st.t += dt * st.sp; if(st.t < 0) continue; if(st.t >= 2){ ST.splice(s, 1); continue; }
+      var pos, nxt, t1 = Math.min(st.t, 1.999);
+      if(t1 < 1){ var c1 = [cx - R * .6, cy + R * st.bend + st.off * .3]; pos = quad([L[0], L[1] + st.off * .4], c1, [cx, cy], t1); nxt = quad([L[0], L[1] + st.off * .4], c1, [cx, cy], Math.min(1, t1 + .02)); }
+      else { var tt = t1 - 1, c2 = [cx + R * .6, cy - R * st.bend - st.off * .3]; pos = quad([cx, cy], c2, [Rt[0], Rt[1] + st.off * .4], tt); nxt = quad([cx, cy], c2, [Rt[0], Rt[1] + st.off * .4], Math.min(1, tt + .02)); }
+      var an = Math.atan2(nxt[1] - pos[1], nxt[0] - pos[0]) + Math.PI / 2, near = Math.min(1, Math.hypot(pos[0] - cx, pos[1] - cy) / (R * .5));
+      drawFly(pos[0], pos[1], an, 16 * st.z * (.4 + near * .6), .95, st.col);
+    }
+    requestAnimationFrame(frame);
+  }
+  addEventListener('resize', size); size(); burst(24, '#c79bff'); requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
